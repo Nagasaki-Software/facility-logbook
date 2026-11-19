@@ -10,6 +10,8 @@ import socket
 import sys
 from pathlib import Path
 
+APP_VERSION = "0.1.0"  # 版数の出どころはここだけ（Releases の版と合わせる）
+
 BASE = Path(__file__).resolve().parent
 # 自分のフォルダを import パスへ（work / check パッケージを解決するため）
 sys.path.insert(0, str(BASE))
@@ -109,7 +111,7 @@ def main():
     app = build_application()
     # 運転記録DB・点検DBの日次バックアップを開始（backup フォルダへ records_*.db / check_*.db）
     start_backup_thread(WORK_DB, BACKUP_DIR, keep_days=90, extra=((CHECK_DB, "check"),))
-    print(f"統合アプリを起動します  ->  http://127.0.0.1:{port}/")
+    print(f"統合アプリを起動します（バージョン {APP_VERSION}）  ->  http://127.0.0.1:{port}/")
     print("停止するにはこの画面を閉じるか Ctrl+C を押してください。")
     run_simple("0.0.0.0", port, app, threaded=True, use_reloader=False)
 
