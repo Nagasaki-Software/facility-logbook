@@ -1,0 +1,8 @@
+{
+  "key": "sample_boiler",
+  "name": "サンプル ボイラ",
+  "order": 1,
+  "csv": "checklist.csv",
+  "pdf_form": "form.pdf",
+  "mapping": "mapping.json"
+}

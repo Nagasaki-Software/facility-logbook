@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block body %}
+<div id="buttons-root"></div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='common.js') }}"></script>
+<script src="{{ url_for('static', filename='buttons.js') }}"></script>
+{% endblock %}

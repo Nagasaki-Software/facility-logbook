@@ -1,0 +1,360 @@
+* { box-sizing: border-box; }
+body {
+  font-family: "Meiryo", "メイリオ", sans-serif;
+  margin: 0; padding: 0;
+  background: #fafafa;
+}
+.app-title {
+  font-size: 1.8em; font-weight: bold; padding: 0.3em 0.6em;
+  flex: 0 0 auto;   /* 全画面レイアウト時も高さを固定 */
+}
+nav {
+  background: #2b3a55; color: #fff; padding: 0.6em 1em;
+}
+nav a { color: #fff; text-decoration: none; margin-right: 1em; font-weight: bold; }
+main { padding: 1em; }
+
+/* ボタン管理ページ */
+.bm-group { margin-bottom: 1em; }
+.bm-group ul { list-style: none; padding-left: 0; margin: 0.4em 0; }
+.bm-group li { display: flex; align-items: center; gap: 0.3em; padding: 0.25em 0; flex-wrap: wrap; }
+.bm-group li > span { flex: 1; min-width: 6em; }
+.bm-group button { padding: 0.4em 0.6em; }
+.bm-group .b-left, .bm-group .b-right,
+.bm-group .g-up, .bm-group .g-down { min-width: 2.6em; font-size: 1em; }
+.bm-group button:disabled { opacity: 0.35; }
+
+/* Layout switch */
+/* 記録ページのみ画面全体の高さを使う（履歴/ボタン管理ページには影響しない） */
+body.layout-bottom, body.layout-right {
+  height: 100vh; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+body.layout-bottom nav, body.layout-right nav { flex: 0 0 auto; }
+body.layout-bottom main, body.layout-right main {
+  flex: 1; min-height: 0; display: flex; flex-direction: column;
+}
+body.layout-bottom #record-root, body.layout-right #record-root {
+  flex: 1; min-height: 0; display: flex; flex-direction: column;
+}
+.layout-bottom .controls, .layout-right .controls { flex: 0 0 auto; }
+.layout-bottom #record-area, .layout-right #record-area { flex: 1; min-height: 0; }
+
+/* 下配置：縦並び。履歴が伸び、入力欄は下端へ */
+.layout-bottom #record-area { display: flex; flex-direction: column; }
+.layout-bottom .entries-scroll { flex: 1; min-height: 6em; }
+/* ボタンエリアは高さを固定してスクロール（既定28vh。境界ドラッグで変更） */
+.layout-bottom .button-panel { flex: 0 0 auto; height: 28vh; overflow-y: auto; }
+/* 記録とボタンの境界（ドラッグで広さ変更） */
+.split-handle {
+  flex: 0 0 auto; height: 12px; cursor: row-resize;
+  background: repeating-linear-gradient(90deg, #bbb 0 8px, transparent 8px 16px) center/100% 2px no-repeat, #e6e6e6;
+  border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; touch-action: none;
+}
+body.theme-dark .split-handle { background: #444; border-color: #555; }
+
+/* 右配置：左に 履歴＋入力欄（縦）、右に ボタン＋テンキー */
+.layout-right #record-area { display: flex; flex-direction: row; gap: 1em; align-items: stretch; }
+.layout-right .main-col { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 0; }
+.layout-right .main-col .entries-scroll { flex: 1; min-height: 0; }
+.layout-right .side-col { width: 40%; flex-shrink: 0; overflow-y: auto; }
+/* 右配置：ボタンエリアも高さ固定＋スクロール＋右下ドラッグで可変（添付が隠れないように） */
+.layout-right .side-col .button-panel {
+  margin-top: 0; height: 45vh; min-height: 5em; max-height: 80vh;
+  overflow-y: auto; resize: vertical;
+}
+
+/* Header */
+.record-header {
+  display: flex; justify-content: space-between; align-items: center;
+  background: #fff; padding: 0.5em 1em; border: 1px solid #ccc;
+}
+.record-header input.title { font-size: 1.1em; font-weight: bold; width: 60%; padding: 0.3em; }
+.record-header .date { font-size: 1em; cursor: pointer; }
+
+/* Table */
+table.entries {
+  width: 100%; border-collapse: collapse; background: #fff;
+}
+table.entries th, table.entries td {
+  border: 1px solid #999; padding: 0.4em 0.6em; vertical-align: middle;
+}
+table.entries th { background: #eee; }
+/* 記録が増えてもヘッダー行（時刻/作業内容/操作）を固定し、記録だけをスクロール */
+.entries-scroll { overflow-y: auto; min-height: 4em; }
+table.entries thead th { position: sticky; top: 0; z-index: 2; box-shadow: 0 1px 0 #999; }
+table.entries td.time { width: 10.5em; text-align: left; }
+table.entries td.actions { width: 12em; text-align: center; white-space: nowrap; }
+table.entries tr.important td { background: #FFF2CC; }
+table.entries tr.important2 td { background: #FFD6E7; }
+table.entries tr.editing td { background: #e8f3ff; }
+table.entries tr.inserting td { background: #eef9ee; }
+.insert-top-bar { margin: 0.4em 0; }
+.copy-banner {
+  margin: 0.4em 0; padding: 0.5em 0.8em;
+  background: #fff7e0; border: 1px solid #e0b000; border-radius: 4px;
+  display: flex; align-items: center; gap: 0.6em; flex-wrap: wrap;
+}
+.copy-banner button { padding: 0.3em 0.8em; }
+
+/* 添付写真（ファイル全体・最大3枚） */
+.attachments {
+  background: #fff; border: 1px solid #ccc; padding: 0.5em 0.8em; margin: 0.5em 0;
+  /* メモが長くてもボタンエリアを圧迫しないよう、高さ固定＋スクロール＋ドラッグで可変 */
+  height: 9em; min-height: 3em; max-height: 70vh;
+  overflow-y: auto; resize: vertical;
+}
+.attachments .att-title { font-weight: bold; margin-bottom: 0.3em; }
+.attachments .att-list { list-style: none; padding-left: 0; margin: 0.2em 0; }
+.attachments .att-list li { display: flex; align-items: center; gap: 0.6em; flex-wrap: wrap; padding: 0.15em 0; }
+.attachments .att-link { font-weight: bold; }
+.attachments .att-dl { font-size: 0.9em; }
+.attachments .att-add { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4em; margin-top: 0.3em; }
+.attachments .att-memo-input { padding: 0.3em; min-width: 12em; }
+.attachments .att-hint { color: #888; font-size: 0.85em; }
+.attachments .att-full { color: #888; font-size: 0.9em; margin-top: 0.3em; }
+body.theme-dark .attachments { background: #2a2a2a; border-color: #444; }
+
+/* Button panel */
+.button-panel {
+  margin-top: 1em; background: #fff; border: 1px solid #ccc; padding: 0.6em;
+}
+.button-panel .group-tabs { display: flex; gap: 0.3em; flex-wrap: wrap; margin-bottom: 0.5em; }
+.button-panel .group-tabs button.active { background: #2b3a55; color: #fff; }
+.button-panel .grid { display: flex; flex-wrap: wrap; gap: 0.3em; }
+.button-panel .grid button {
+  padding: 0.6em 0.8em; font-size: 1em; min-width: 8em;
+}
+.button-panel .grid button.pinned::before { content: "★ "; }
+
+/* 運転マニュアル（手順表）。見出しと表ヘッダーを残して、手順だけをスクロールさせる */
+.button-panel.manual-open { display: flex; flex-direction: column; overflow: hidden; }
+.button-panel.manual-open .group-tabs { flex: 0 0 auto; }
+.manual-panel { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.manual-head {
+  display: flex; align-items: center; gap: 0.8em; flex-wrap: wrap;
+  flex: 0 0 auto; padding-bottom: 0.4em;
+}
+.manual-head .manual-select { padding: 0.3em; max-width: 16em; }
+.manual-head .manual-name { font-weight: bold; }
+.manual-head .manual-count { color: #2e7d32; font-weight: bold; }
+.manual-head .manual-reset { margin-left: auto; padding: 0.3em 0.8em; }
+.manual-scroll { flex: 1; min-height: 4em; overflow-y: auto; }
+table.manual-table { width: 100%; border-collapse: collapse; background: #fff; }
+table.manual-table th, table.manual-table td {
+  border: 1px solid #999; padding: 0.45em 0.6em; vertical-align: middle;
+}
+table.manual-table th { background: #eee; }
+table.manual-table thead th { position: sticky; top: 0; z-index: 2; box-shadow: 0 1px 0 #999; }
+table.manual-table td.mstep-no { width: 4em; text-align: center; color: #555; }
+table.manual-table td.mstep-time { width: 5.5em; text-align: center; white-space: nowrap; }
+tr.manual-section td { background: #e8eef7; font-weight: bold; border-top: 2px solid #7a90b0; }
+tr.manual-step { cursor: pointer; }
+tr.manual-step .mstep-note { color: #c00; font-size: 0.85em; margin-top: 0.15em; }
+.manual-panel:not(.read-only-manual) tr.manual-step:hover td { background: #eef5ff; }
+/* 実施済み：薄い緑の背景＋左端に緑のバー */
+tr.manual-step.done td { background: #e8f6e8; }
+tr.manual-step.done td.mstep-no { border-left: 6px solid #2e7d32; }
+tr.manual-step.done td.mstep-time { color: #2e7d32; font-weight: bold; }
+.manual-panel:not(.read-only-manual) tr.manual-step.done:hover td { background: #d9efd9; }
+.manual-panel.read-only-manual tr.manual-step { cursor: default; }
+.manual-empty, .manual-error { padding: 0.6em; line-height: 1.6; }
+.manual-empty { color: #666; }
+.manual-error { color: #c00; font-weight: bold; background: #fff0f0; border: 1px solid #e0a0a0; }
+
+/* Input bar */
+.input-bar { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 0.5em; margin-top: 0.5em; }
+.input-bar [name="content"] { flex: 1; min-width: 12em; font-size: 1em; padding: 0.3em; resize: vertical; font-family: inherit; }
+/* 「追記」「消去」ボタンを通常の約2倍の面積に */
+.input-bar #append-btn, .input-bar #clear-content-btn {
+  font-size: 1.15em; padding: 0.8em 1.5em; min-width: 6em;
+}
+/* 作業内容セルは改行をそのまま表示 */
+table.entries td.content { white-space: pre-wrap; word-break: break-word; }
+.insert-form .insert-content, table.entries td .edit-content {
+  resize: vertical; font-family: inherit;
+}
+table.entries td .edit-content { width: 100%; box-sizing: border-box; }
+.now-time { font-size: 1.2em; font-weight: bold; white-space: nowrap; }
+.now-time .now-time-val { font-variant-numeric: tabular-nums; }
+
+/* 行挿入フォーム（記入漏れの追記） */
+.insert-form { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5em; padding: 0.3em 0; }
+.insert-form .insert-content { flex: 1; min-width: 12em; font-size: 1em; padding: 0.3em; }
+
+/* 時刻ダイヤル（タブレット向け） */
+.time-picker { display: inline-flex; align-items: center; gap: 0.3em; }
+.time-picker .tp-col { display: flex; flex-direction: column; align-items: center; }
+.time-picker .tp-num {
+  font-size: 1.6em; font-weight: bold; min-width: 1.8em; text-align: center;
+  font-variant-numeric: tabular-nums; line-height: 1.2;
+}
+.time-picker .tp-colon { font-size: 1.6em; font-weight: bold; }
+.time-picker .tp-label { font-size: 0.7em; color: #666; }
+.time-picker .tp-step {
+  font-size: 1.1em; line-height: 1; padding: 0.35em 0.7em; min-width: 2.4em;
+}
+.time-picker .tp-quick { display: flex; flex-direction: column; gap: 0.2em; margin-left: 0.4em; }
+.time-picker .tp-quick button { padding: 0.45em 0.7em; font-size: 0.95em; white-space: nowrap; }
+
+/* 時刻コントロール（今すぐ/指定/範囲/なし） */
+.time-control { display: flex; flex-direction: column; gap: 0.3em; }
+.tc-modes { display: flex; gap: 0.2em; flex-wrap: wrap; }
+.tc-mode { padding: 0.35em 0.7em; font-size: 0.95em; }
+.tc-mode.active { background: #2b3a55; color: #fff; font-weight: bold; }
+.tc-body { display: flex; align-items: center; gap: 0.4em; flex-wrap: wrap; }
+.tc-tilde { font-size: 1.5em; font-weight: bold; }
+.tc-blank { color: #666; }
+
+/* テンプレートボタンの数値入力ダイアログ */
+.tpl-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center; z-index: 1000;
+}
+.tpl-box {
+  background: #fff; border-radius: 8px; padding: 1em 1.2em; width: min(92vw, 22em);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+.tpl-title { font-weight: bold; font-size: 1.1em; margin-bottom: 0.6em; }
+.tpl-fields { display: flex; flex-direction: column; gap: 0.5em; }
+.tpl-field { display: flex; justify-content: space-between; align-items: center; gap: 0.5em; }
+.tpl-field input {
+  width: 6em; font-size: 1.4em; text-align: center; padding: 0.2em;
+  font-variant-numeric: tabular-nums;
+}
+.tpl-preview {
+  margin: 0.6em 0; padding: 0.4em 0.6em; background: #f3f3f3; border-radius: 4px;
+  min-height: 1.4em; word-break: break-all;
+}
+.tpl-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4em; margin-bottom: 0.6em; }
+.tpl-keypad button { padding: 0.7em; font-size: 1.3em; }
+.tpl-actions { display: flex; gap: 0.5em; justify-content: flex-end; }
+.tpl-actions button { padding: 0.5em 1.2em; font-size: 1em; }
+.tpl-actions .tpl-ok { background: #2b3a55; color: #fff; font-weight: bold; }
+
+/* Keypad */
+.keypad {
+  display: none;
+  margin-top: 0.5em; padding: 0.4em;
+  background: #f0f0f0; border: 1px solid #ccc;
+  width: 14em;
+}
+.keypad.on { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.3em; }
+.keypad button { padding: 0.8em; font-size: 1.1em; }
+
+/* Controls */
+.controls { display: flex; gap: 0.5em; margin: 0.5em 0; flex-wrap: wrap; align-items: center; }
+.controls button, .controls select { padding: 0.4em 0.6em; }
+
+/* 接続切れの警告バナー */
+.conn-banner {
+  background: #b00020; color: #fff; padding: 0.5em 0.8em; font-weight: bold;
+}
+.finalized-banner {
+  background: #fff3cd; color: #7a5b00; border: 1px solid #e0c97a;
+  padding: 0.6em 0.9em; font-weight: bold;
+}
+.rec-id {
+  display: inline-block; font-size: 0.8em; color: #555;
+  background: #eef0f3; border-radius: 4px; padding: 0 0.4em; margin-right: 0.4em;
+}
+.rec-lock { color: #7a5b00; font-weight: bold; margin: 0 0.3em; }
+
+/* 記録表の上のツールバー（絞り込み・並べ替え） */
+.table-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3em; margin: 0.4em 0; }
+.table-toolbar .ttl-label { color: #555; }
+.table-toolbar .filter-btn.active { background: #2b3a55; color: #fff; font-weight: bold; }
+.table-toolbar .ttl-search { display: inline-flex; align-items: center; gap: 0.2em; }
+.table-toolbar .entry-search { padding: 0.25em 0.5em; min-width: 12em; }
+.table-toolbar .entry-search-clear { padding: 0.1em 0.5em; }
+.table-toolbar #sort-time-btn { margin-left: auto; }
+.input-bar .suggest-select { max-width: 14em; padding: 0.3em; align-self: flex-start; }
+
+/* 削除取り消しトースト */
+.wr-toast {
+  position: fixed; left: 50%; bottom: 1.5em; transform: translateX(-50%);
+  background: #333; color: #fff; padding: 0.7em 1em; border-radius: 6px;
+  display: flex; align-items: center; gap: 0.8em; z-index: 2000;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.wr-toast button {
+  background: #ffd54f; color: #222; border: none; border-radius: 4px;
+  padding: 0.4em 0.9em; font-weight: bold; cursor: pointer;
+}
+
+/* 文字サイズ */
+body.font-large { font-size: 1.15em; }
+body.font-xlarge { font-size: 1.35em; }
+
+/* ダークモード（夜勤向け） */
+body.theme-dark { background: #1e1e1e; color: #e0e0e0; }
+body.theme-dark nav { background: #11151c; }
+body.theme-dark .record-header,
+body.theme-dark .button-panel,
+body.theme-dark .keypad { background: #2a2a2a; border-color: #444; }
+body.theme-dark table.entries { background: #2a2a2a; }
+body.theme-dark table.entries th { background: #333; color: #e0e0e0; }
+body.theme-dark table.entries th, body.theme-dark table.entries td { border-color: #555; }
+body.theme-dark table.entries thead th { box-shadow: 0 1px 0 #555; }
+body.theme-dark table.entries tr.important td { background: #6b5d12; }
+body.theme-dark table.entries tr.important2 td { background: #6e2747; }
+body.theme-dark table.entries tr.editing td { background: #244055; }
+body.theme-dark input, body.theme-dark textarea, body.theme-dark select {
+  background: #333; color: #e0e0e0; border: 1px solid #555;
+}
+body.theme-dark button { background: #3a3a3a; color: #e0e0e0; border: 1px solid #555; }
+body.theme-dark .table-toolbar .ttl-label { color: #aaa; }
+body.theme-dark .table-toolbar .filter-btn.active { background: #5a7cb0; color: #fff; }
+body.theme-dark .button-panel .group-tabs button.active { background: #5a7cb0; }
+body.theme-dark table.manual-table { background: #2a2a2a; }
+body.theme-dark table.manual-table th { background: #333; color: #e0e0e0; }
+body.theme-dark table.manual-table th, body.theme-dark table.manual-table td { border-color: #555; }
+body.theme-dark table.manual-table thead th { box-shadow: 0 1px 0 #555; }
+body.theme-dark table.manual-table td.mstep-no { color: #aaa; }
+body.theme-dark tr.manual-section td { background: #33405a; border-top-color: #6b83ab; }
+body.theme-dark tr.manual-step .mstep-note { color: #ff9a9a; }
+body.theme-dark tr.manual-step.done td { background: #2c4630; }
+body.theme-dark tr.manual-step.done td.mstep-time { color: #9bd89b; }
+body.theme-dark .manual-panel:not(.read-only-manual) tr.manual-step:hover td { background: #33455c; }
+body.theme-dark .manual-panel:not(.read-only-manual) tr.manual-step.done:hover td { background: #365638; }
+body.theme-dark .manual-head .manual-count { color: #9bd89b; }
+body.theme-dark .manual-empty { color: #aaa; }
+body.theme-dark .manual-error { color: #ff9a9a; background: #3a2222; border-color: #7a4444; }
+
+/* Read-only mode */
+.read-only input, .read-only button.action { pointer-events: none; opacity: 0.4; }
+
+/* History page calendar */
+table.calendar { border-collapse: collapse; margin-top: 1em; }
+table.calendar th, table.calendar td {
+  border: 1px solid #ccc; width: 3em; height: 3em; text-align: center;
+  cursor: pointer;
+}
+table.calendar td.has-record { background: #e7f0ff; font-weight: bold; }
+.cal-controls { display: flex; align-items: center; gap: 1em; font-size: 1.1em; }
+.day-records ul { list-style: none; padding-left: 0; }
+.range-export { margin-top: 1em; }
+.record-search { display: flex; gap: 0.4em; align-items: center; margin: 0.6em 0; flex-wrap: wrap; }
+.record-search #rec-search { padding: 0.3em 0.5em; min-width: 18em; }
+.search-results { background: #fff; border: 1px solid #ccc; padding: 0.5em 0.8em; margin-bottom: 0.6em; }
+.search-results ul { list-style: none; padding-left: 0; }
+.search-results li { padding: 0.2em 0; }
+
+/* 印刷／PDF用：操作系を隠し、記録だけをきれいに出す */
+@media print {
+  nav, .controls, .button-panel, .input-bar, .keypad, .table-toolbar,
+  .insert-top-bar, .split-handle, .copy-banner, .conn-banner,
+  .attachments .att-add, .wr-toast { display: none !important; }
+  body.layout-bottom, body.layout-right {
+    height: auto !important; overflow: visible !important; display: block !important;
+  }
+  main, #record-root, #record-area, .main-col, .side-col {
+    display: block !important; height: auto !important; width: auto !important; overflow: visible !important;
+  }
+  .entries-scroll { overflow: visible !important; height: auto !important; max-height: none !important; }
+  table.entries td.actions, table.entries th:last-child { display: none !important; }
+  table.entries thead th { position: static !important; }
+  .app-title { font-size: 1.4em; }
+  body.theme-dark { background: #fff !important; color: #000 !important; }
+  body.theme-dark table.entries, body.theme-dark table.entries th { background: #fff !important; color: #000 !important; }
+}

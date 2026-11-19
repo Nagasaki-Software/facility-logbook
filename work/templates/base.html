@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>{% block title %}{{ app_title }}{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script>
+  window.APP_BASE = "{{ request.script_root }}";
+  (function(){ var f = window.fetch;
+    window.fetch = function(u, o){ if (typeof u === "string" && u.charAt(0) === "/" && u.indexOf(APP_BASE + "/") !== 0) u = APP_BASE + u; return f(u, o); }; })();
+  window.U = function(p){ return (typeof p === "string" && p.charAt(0) === "/" && p.indexOf(APP_BASE + "/") !== 0) ? APP_BASE + p : p; };
+</script>
+<style>
+  .app-tabs{ display:flex; background:#11233a; }
+  .app-tabs a{ padding:11px 22px; color:#cdd8e6; text-decoration:none; font-weight:700; font-size:15px; border-right:1px solid #1f3a5f; }
+  .app-tabs a.active{ background:#f4f6f9; color:#11233a; }
+  .app-tabs a:hover:not(.active){ background:#1c3454; color:#fff; }
+</style>
+</head>
+<body>
+<div class="app-tabs"><a href="/work/" class="active">運転記録</a><a href="/check/">チェックリスト</a></div>
+<header class="app-title">{{ app_title }}</header>
+<nav>
+  <a href="{{ url_for('pages.record_page') }}">記録</a> | <a href="{{ url_for('pages.history_page') }}">過去記録</a> | <a href="{{ url_for('pages.buttons_page') }}">ボタン管理</a>
+</nav>
+<main>{% block body %}{% endblock %}</main>
+{% block scripts %}{% endblock %}
+</body>
+</html>

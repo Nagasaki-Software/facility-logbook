@@ -1,0 +1,96 @@
+{
+  "default_font_size": 10,
+  "fields": [
+    {
+      "source": "meta.inspection_date",
+      "page": 0,
+      "x": 108,
+      "y": 752,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "meta.inspector",
+      "page": 0,
+      "x": 358,
+      "y": 752,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:本体に油漏れ・エア漏れがないこと",
+      "page": 0,
+      "x": 360,
+      "y": 688,
+      "check_mark": "✓",
+      "ng_color": "#ff0000",
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:異音・異常振動がないこと",
+      "page": 0,
+      "x": 360,
+      "y": 664,
+      "check_mark": "✓",
+      "ng_color": "#ff0000",
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:冷却ファンが正常に回転していること",
+      "page": 0,
+      "x": 360,
+      "y": 640,
+      "check_mark": "✓",
+      "ng_color": "#ff0000",
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:吐出圧力",
+      "page": 0,
+      "x": 360,
+      "y": 584,
+      "ng_color": "#ff0000",
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:タンク内温度",
+      "page": 0,
+      "x": 360,
+      "y": 560,
+      "ng_color": "#ff0000",
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:オイルレベル",
+      "page": 0,
+      "x": 360,
+      "y": 536,
+      "ng_color": "#ff0000",
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:ドレン排出を実施したこと",
+      "page": 0,
+      "x": 360,
+      "y": 480,
+      "check_mark": "✓",
+      "ng_color": "#ff0000",
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "meta.note",
+      "page": 0,
+      "x": 68,
+      "y": 424,
+      "font_size": 10,
+      "color": "#000000"
+    }
+  ]
+}

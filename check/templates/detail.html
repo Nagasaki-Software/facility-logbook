@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block body %}
+<div class="meta"><div><label>点検日</label> {{ detail.inspection_date }}</div>
+<div><label>点検者</label> {{ detail.inspector }}</div></div>
+<table class="hist"><tr><th>区分</th><th>点検内容</th><th>値</th><th>判定</th></tr>
+{% for it in detail['items'] %}
+<tr><td>{{ it.section }}</td><td>{{ it.item_name }}</td>
+<td>{% if it.item_type=='check' %}{% if it.judgement=='NG' %}✕{% elif it.value_check %}✓{% else %}未{% endif %}{% elif it.item_type=='meter' %}使用前 {{ it.value_before|num if it.value_before is not none else '—' }} / 使用後 {{ it.value_number|num if it.value_number is not none else '—' }} {{ it.unit }}{% if it.value_before is not none and it.value_number is not none %}（使用量 {{ (it.value_number - it.value_before)|num if it.value_number >= it.value_before else '要確認' }}）{% endif %}{% elif it.item_type=='time' %}{{ it.value_text or '—' }}{% else %}{% if it.value_number is not none %}{{ it.value_number|num }} {{ it.unit }}{% endif %}{% endif %}</td>
+<td>{{ it.judgement or '—' }}</td></tr>
+{% endfor %}</table>
+<div class="note"><label>特記事項</label><div>{{ detail.note }}</div></div>
+<div class="foot"><a class="btn-pdf" style="padding:14px 26px;border-radius:10px;color:#fff;text-decoration:none;" href="{{ url_for('api_pdf.export_pdf', iid=detail.id) }}">規定フォームでPDF出力</a></div>
+{% endblock %}

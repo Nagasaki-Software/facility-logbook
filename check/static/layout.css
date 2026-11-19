@@ -1,0 +1,27 @@
+:root{ --navy:#1f3a5f; }
+*{ box-sizing:border-box; }
+body{ margin:0; font-family:"Segoe UI","Meiryo",sans-serif; color:#1d2939; background:#eef2f7; }
+.lo-top{ display:flex; justify-content:space-between; align-items:center; background:var(--navy); color:#fff; padding:10px 16px; }
+.lo-title{ font-weight:700; }
+.lo-actions{ display:flex; gap:12px; align-items:center; }
+.lo-actions select{ padding:6px 8px; border-radius:6px; }
+.lo-save{ background:#1f8a4c; color:#fff; border:none; padding:10px 22px; border-radius:8px; font-weight:700; font-size:15px; cursor:pointer; }
+.lo-back{ color:#fff; text-decoration:underline; }
+.lo-body{ display:flex; gap:14px; padding:14px; align-items:flex-start; }
+.lo-stagewrap{ flex:1; overflow:auto; background:#fff; border:1px solid #d0d5dd; border-radius:8px; padding:8px; }
+.lo-stage{ position:relative; display:inline-block; }
+.lo-stage img{ display:block; max-width:100%; height:auto; user-select:none; -webkit-user-drag:none; }
+.marker{ position:absolute; transform:translateY(-100%); background:rgba(31,58,95,.9); color:#fff; font-size:12px; padding:3px 7px; border-radius:5px; white-space:nowrap; cursor:move; touch-action:none; border:2px solid transparent; }
+.marker.sel{ border-color:#ffd24a; background:#d23b3b; }
+.lo-side{ width:300px; background:#fff; border:1px solid #d0d5dd; border-radius:8px; padding:10px; }
+.lo-sec{ font-size:12px; font-weight:700; color:var(--navy); background:#eef2f7; padding:6px 8px; border-radius:5px; margin:6px 0; }
+.lo-list{ max-height:40vh; overflow:auto; }
+.fl-row{ display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #eef0f3; cursor:pointer; font-size:14px; }
+.fl-row.sel{ background:#fff5f5; }
+.fl-row.orphan{ color:#d23b3b; }
+.fl-status{ color:#98a2b3; font-size:12px; }
+.lo-panel label{ display:block; margin:8px 0; font-size:14px; }
+.lo-panel input[type=number]{ width:80px; padding:6px; }
+.lo-panel button{ margin-top:8px; background:#d23b3b; color:#fff; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; }
+.lo-muted{ color:#98a2b3; }
+.err{ color:#d23b3b; padding:10px; }

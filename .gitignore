@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+build/
+dist/
+*.exe
+# 実データ・バックアップ・出力物（アプリを動かすたびに変わるため管理しない）
+data/
+backup/
+output/
+# 開発用のメモ（手元にだけ残し、公開しない）
+check/docs/
+引き継ぎメモ.md

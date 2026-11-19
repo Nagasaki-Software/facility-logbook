@@ -1,0 +1,155 @@
+{
+  "default_font_size": 10,
+  "fields": [
+    {
+      "source": "meta.inspection_date",
+      "page": 0,
+      "x": 108,
+      "y": 752,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "meta.inspector",
+      "page": 0,
+      "x": 358,
+      "y": 752,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:本体に油漏れ・水漏れがないこと",
+      "page": 0,
+      "x": 360,
+      "y": 688,
+      "check_mark": "✓",
+      "ng_color": "#ff0000",
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:異音・異常振動がないこと",
+      "page": 0,
+      "x": 360,
+      "y": 664,
+      "check_mark": "✓",
+      "ng_color": "#ff0000",
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:蒸気圧力",
+      "page": 0,
+      "x": 360,
+      "y": 608,
+      "ng_color": "#ff0000",
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:給水温度",
+      "page": 0,
+      "x": 360,
+      "y": 584,
+      "ng_color": "#ff0000",
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:排ガス温度",
+      "page": 0,
+      "x": 360,
+      "y": 560,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:装置起動時刻",
+      "page": 0,
+      "x": 360,
+      "y": 536,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:オイルメータ指示値",
+      "page": 0,
+      "x": 360,
+      "y": 480,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "usage:オイルメータ指示値",
+      "page": 0,
+      "x": 360,
+      "y": 456,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:水道メータ指示値",
+      "page": 0,
+      "x": 360,
+      "y": 432,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "usage:水道メータ指示値",
+      "page": 0,
+      "x": 360,
+      "y": 408,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:オイル＋水道 使用量合計",
+      "page": 0,
+      "x": 360,
+      "y": 384,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:オイル／水道 割合(%)",
+      "page": 0,
+      "x": 360,
+      "y": 360,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:燃料メータ（使用前）",
+      "page": 0,
+      "x": 360,
+      "y": 304,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "item:燃料メータ（使用後）",
+      "page": 0,
+      "x": 360,
+      "y": 280,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "ausage:燃料メータ（使用後）",
+      "page": 0,
+      "x": 360,
+      "y": 256,
+      "font_size": 10,
+      "color": "#000000"
+    },
+    {
+      "source": "meta.note",
+      "page": 0,
+      "x": 68,
+      "y": 200,
+      "font_size": 10,
+      "color": "#000000"
+    }
+  ]
+}

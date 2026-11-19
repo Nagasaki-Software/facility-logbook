@@ -1,0 +1,8 @@
+{
+  "key": "air_compressor",
+  "name": "エアーコンプレッサー",
+  "order": 2,
+  "csv": "checklist.csv",
+  "pdf_form": "form.pdf",
+  "mapping": "mapping.json"
+}

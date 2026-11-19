@@ -1,0 +1,93 @@
+:root{ --navy:#1f3a5f; --ok:#1f8a4c; --ng:#d23b3b; }
+body{ font-family:"Segoe UI","Meiryo",sans-serif; margin:0; color:#1d2939; background:#f4f6f9; }
+/* 文字サイズ（標準/大/特大）。運転記録と同じ方式 */
+body.font-large{ font-size:1.15em; }
+body.font-xlarge{ font-size:1.35em; }
+.ck-controls{ display:flex; gap:0.5em; align-items:center; flex-wrap:wrap; padding:10px 18px 0; }
+.ck-controls label{ display:flex; align-items:center; gap:6px; font-size:14px; color:#1d2939; }
+.ck-controls select{ padding:0.4em 0.6em; border:1px solid #cbd2dc; border-radius:8px; font-size:14px; }
+.topbar{ display:flex; justify-content:space-between; align-items:center; background:var(--navy); color:#fff; padding:12px 18px; }
+.app-title{ font-family:"Meiryo","メイリオ",sans-serif; font-size:1.8em; font-weight:bold; padding:0.3em 0.6em; background:#fafafa; color:#1d2939; }
+.topbar .nav a{ color:#fff; text-decoration:none; font-weight:bold; background:none; padding:0; border-radius:0; margin-right:1em; }
+.topbar .nav a.on{ text-decoration:underline; }
+.tabs{ display:flex; gap:6px; flex-wrap:wrap; background:#eef2f7; padding:10px 14px 0; }
+.tabs a{ padding:11px 18px; border-radius:10px 10px 0 0; background:#dbe3ee; color:#33415c; text-decoration:none; }
+.tabs a.on{ background:#fff; color:var(--navy); font-weight:700; }
+.meta{ display:flex; gap:18px; padding:14px 18px; background:#fff; flex-wrap:wrap; }
+.meta label{ font-size:1em; color:#667085; display:block; }
+.meta input, .meta select{ padding:9px 12px; border:1px solid #cbd2dc; border-radius:8px; font-size:1em; }
+.sec{ font-size:1em; font-weight:700; color:var(--navy); background:#eef2f7; padding:7px 12px; border-radius:6px; margin:14px 18px 0; }
+.ck-row .name{ font-size:1em; padding-left:22px; }
+.ck-row{ display:grid; grid-template-columns:minmax(160px,1.1fr) minmax(150px,1.2fr) 200px 80px; gap:12px; align-items:center; padding:12px 18px; border-bottom:1px solid #eef0f3; background:#fff; }
+.ck-remark{ font-size:1em; color:#5a6473; background:#fbfaf2; border-left:3px solid #e6c34a; padding:7px 10px; border-radius:4px; }
+.ck-remark.important{ color:var(--ng); font-weight:700; background:#fde7e7; border-left-color:var(--ng); }
+.ck-input{ display:flex; gap:8px; align-items:center; justify-content:flex-end; }
+.ck-check{ width:42px; height:42px; border:2px solid var(--navy); border-radius:9px; font-size:24px; color:var(--ok); background:#fff; cursor:pointer; }
+.ck-check.done{ background:#e7f6ec; }
+.ck-btn{ width:58px; height:42px; border:2px solid #cbd2dc; border-radius:9px; font-size:16px; font-weight:700; color:#98a2b3; background:#fff; cursor:pointer; }
+.ck-ok.active{ background:#e7f6ec; border-color:var(--ok); color:var(--ok); }
+.ck-ng.active{ background:#fde7e7; border-color:var(--ng); color:var(--ng); }
+.meter-io{ grid-column:1 / -1; display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-top:6px; padding:8px 10px; border-radius:6px; background:#eef3fb; }
+.meter-io .mio-field{ display:flex; align-items:center; gap:6px; font-size:0.9em; font-weight:700; color:#1f3a5f; }
+.meter-io .mio-field .ck-num{ width:120px; }
+.meter-io .mu-result{ font-weight:700; color:#1f3a5f; margin-left:auto; }
+.meter-io .mu-result.warn{ color:var(--ng); }
+.meter-hint{ font-size:0.8em; color:#98a2b3; }
+.meter-result{ grid-column:1 / -1; margin-top:6px; padding:6px 10px; border-radius:6px; background:#eef3fb; color:#1f3a5f; font-size:0.9em; font-weight:700; }
+.meter-result.warn{ background:#fde7e7; color:var(--ng); }
+.calc-result{ font-weight:700; font-size:1.1em; color:#1f3a5f; }
+.calc-result.warn{ color:var(--ng); }
+.ck-time{ padding:9px 10px; border:1px solid #cbd2dc; border-radius:8px; font-size:1em; }
+.btn-now{ padding:9px 12px; border:1px solid var(--navy); border-radius:8px; background:#eef2f7; color:var(--navy); font-weight:700; cursor:pointer; white-space:nowrap; }
+.btn-now:hover{ background:#dde6f2; }
+.ck-num{ width:110px; padding:10px; border:1px solid #cbd2dc; border-radius:8px; font-size:16px; text-align:right; }
+.ck-num.ng{ border-color:var(--ng); background:#fff5f5; color:var(--ng); font-weight:700; }
+.unit{ color:#667085; width:36px; }
+.judge{ text-align:center; font-weight:700; padding:7px 0; border-radius:8px; }
+.j-ok{ background:#e7f6ec; color:var(--ok); } .j-ng{ background:#fde7e7; color:var(--ng); } .j-na{ background:#f2f4f7; color:#98a2b3; }
+.note{ padding:14px 18px; } .note textarea{ width:100%; box-sizing:border-box; min-height:64px; padding:11px; border:1px solid #cbd2dc; border-radius:8px; }
+.foot{ display:flex; gap:12px; justify-content:flex-end; padding:14px 18px; background:#f7f9fc; }
+.foot button{ padding:14px 26px; font-size:16px; font-weight:700; border:none; border-radius:10px; cursor:pointer; }
+.btn-save{ background:var(--ok); color:#fff; } .btn-pdf{ background:var(--navy); color:#fff; }
+.error{ color:var(--ng); padding:12px 18px; }
+.field-error{ margin-top:6px; color:#fff; background:var(--ng); font-weight:700; font-size:14px; padding:6px 10px; border-radius:6px; }
+#inspector.invalid{ border:2px solid var(--ng); background:#fff5f5; color:var(--ng); font-weight:700; }
+.shake{ animation: shake 0.4s; }
+@keyframes shake{ 0%,100%{ transform:translateX(0); } 20%,60%{ transform:translateX(-6px); } 40%,80%{ transform:translateX(6px); } }
+table.hist{ border-collapse:collapse; width:100%; background:#fff; }
+table.hist th,table.hist td{ border-bottom:1px solid #eef0f3; padding:12px 14px; text-align:left; }
+.pill{ padding:3px 10px; border-radius:20px; font-size:12px; font-weight:700; }
+.filter{ display:flex; gap:14px; align-items:flex-end; padding:14px 18px; background:#fff; flex-wrap:wrap; }
+.ck-check,.ck-btn,.btn-now,.foot button,.tabs a,.topbar .nav a,.filter button,.btn-pdf{ touch-action:manipulation; }
+.btn-temp{ background:#e6a817; color:#fff; }
+.btn-bulk-pdf{ background:#5a3fa0; color:#fff; font-weight:700; border-radius:8px; padding:9px 16px; border:none; cursor:pointer; }
+.btn-bulk-pdf:hover{ background:#472f80; }
+.btn-bulk-pdf:disabled{ background:#aaa; cursor:not-allowed; }
+.btn-usage-csv{ background:#1f8a4c; color:#fff; font-weight:700; border-radius:8px; padding:9px 16px; border:none; cursor:pointer; }
+.btn-usage-csv:hover{ background:#176b3a; }
+.btn-temp:hover{ background:#c98c0a; }
+.temp-banner{ margin:10px 18px 0; padding:12px 16px; border-radius:8px; font-size:14px; font-weight:600; display:flex; align-items:center; gap:10px; }
+.temp-banner.loaded{ background:#fff8e1; color:#7a5500; border:1px solid #f0c040; }
+.temp-banner.saved{ background:#e7f6ec; color:#1f6b3b; border:1px solid #6fcf97; }
+.temp-banner .discard-btn{ margin-left:auto; background:none; border:1px solid currentColor; border-radius:6px; padding:4px 10px; font-size:12px; cursor:pointer; color:inherit; }
+.done-banner{ margin:14px 18px 0; padding:16px 18px; border-radius:10px; font-size:18px; font-weight:700; text-align:center; background:#e7f6ec; color:#1f6b3b; border:2px solid #6fcf97; }
+.test-banner{ margin:14px 18px 0; padding:12px 16px; border-radius:10px; font-size:14px; font-weight:700; text-align:center; background:#fff3cd; color:#7a5b00; border:2px dashed #e0a800; }
+.rec-lock{ color:#1f3a5f; font-weight:700; font-size:0.85em; }
+/* 本日分ロック時のグレーアウト */
+.day-locked .meta, .day-locked #ckform{ opacity:0.55; }
+.day-locked .ck-check, .day-locked .ck-btn{ cursor:not-allowed; }
+.day-locked input:disabled, .day-locked select:disabled, .day-locked textarea:disabled, .day-locked button:disabled{ background:#eceef1; color:#98a2b3; cursor:not-allowed; }
+/* テンキー（タブレット向け。入力画面の「テンキー」を ON にすると数値欄を押したときに出る） */
+#ck-keypad{ display:none; position:fixed; right:16px; bottom:16px; z-index:50; width:300px; padding:10px;
+  background:#fff; border:1px solid #cbd2dc; border-radius:12px; box-shadow:0 8px 24px rgba(16,24,40,0.18); }
+#ck-keypad.on{ display:block; }
+#ck-keypad .kp-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
+#ck-keypad .kp-label{ font-size:14px; font-weight:700; color:#1d2939; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+#ck-keypad .kp-close{ width:40px; height:40px; border:1px solid #cbd2dc; border-radius:8px; background:#f2f4f7; font-size:20px; }
+#ck-keypad .kp-keys{ display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; }
+#ck-keypad .kp-keys button{ height:56px; font-size:22px; border:1px solid #cbd2dc; border-radius:8px; background:#f8fafc; color:#1d2939;
+  touch-action:manipulation; user-select:none; }
+#ck-keypad .kp-keys button:active{ background:#dbe4f0; }
+#ck-keypad .kp-keys button[data-key="次へ"]{ background:#1f3a5f; color:#fff; font-size:18px; }
+#ck-keypad .kp-keys button[data-key="C"], #ck-keypad .kp-keys button[data-key="⌫"]{ background:#eef2f6; }
+body.kp-open{ padding-bottom:420px; }

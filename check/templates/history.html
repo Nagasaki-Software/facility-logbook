@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% block body %}
+<div class="filter">
+  <div><label>期間（開始）</label><input type="date" id="from" value="{{ request.args.get('from', '') }}"></div>
+  <div><label>期間（終了）</label><input type="date" id="to" value="{{ request.args.get('to', '') }}"></div>
+  <div><label>点検者</label><input type="text" id="who" value="{{ request.args.get('who', '') }}" placeholder="（すべて）"></div>
+  <button onclick="applyFilter('{{ current.key }}')">絞り込み</button>
+  <button class="btn-bulk-pdf" onclick="bulkExportPdf('{{ current.key }}')" {% if not rows %}disabled title="出力対象がありません"{% endif %}>
+    {%- if rows %}{{ rows|length }}件をまとめてPDF出力{% else %}PDF出力（対象なし）{% endif %}
+  </button>
+  {% if has_meter %}<button class="btn-usage-csv" onclick="exportUsageCsv('{{ current.key }}')">積算メータCSV出力</button>{% endif %}
+</div>
+<table class="hist"><tr><th>ID</th><th>点検日</th><th>点検者</th><th>判定</th><th>特記事項</th><th></th></tr>
+{% for r in rows %}
+<tr>
+  <td>{{ r.id }}{% if r.editable %} <span class="rec-lock">✏編集可</span>{% endif %}</td>
+  <td>{{ r.inspection_date }}</td><td>{{ r.inspector }}</td>
+  <td>{% if r.ng_count %}<span class="pill j-ng">NG {{ r.ng_count }}件</span>{% else %}<span class="pill j-ok">すべてOK</span>{% endif %}</td>
+  <td>{{ r.note }}</td>
+  <td><a href="{{ url_for('pages.detail', iid=r.id) }}">詳細</a>
+      <a href="{{ url_for('api_pdf.export_pdf', iid=r.id) }}">PDF出力</a>
+      {% if r.editable %}<a href="{{ url_for('pages.record', key=current.key, edit=r.id) }}" style="color:#1f3a5f;font-weight:700">✏修正</a>{% endif %}</td>
+</tr>
+{% endfor %}</table>
+<script src="{{ url_for('static', filename='history.js') }}"></script>
+{% endblock %}

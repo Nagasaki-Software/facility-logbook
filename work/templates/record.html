@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block body %}
+<div id="record-root"
+     data-polling-ms="{{ polling_interval * 1000 }}"
+     {% if request.args.get('record_id') %}data-record-id="{{ request.args.get('record_id') }}"{% endif %}
+     {% if request.args.get('ro') %}data-read-only="1"{% endif %}>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='common.js') }}"></script>
+<script src="{{ url_for('static', filename='manual.js') }}"></script>
+<script src="{{ url_for('static', filename='record.js') }}"></script>
+{% endblock %}

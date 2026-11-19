@@ -1,0 +1,95 @@
+{% extends "base.html" %}{% block body %}
+{% if error %}<p class="error">読み込みエラー: {{ error }}</p>{% endif %}
+{% if current %}
+{% if test_mode %}<div class="test-banner">🧪 テストモード（1日に何度でも保存できます）　※本番では config.json の checklist_test_mode を false に戻してください</div>{% endif %}
+{% if done_today %}<div class="done-banner">✅ 本日のチェックは終了しました（{{ today }}）</div>{% endif %}
+{% if edit_iid %}<div class="done-banner" style="background:#e7eefb;color:#1f3a5f;border-color:#9cb6e0">✏ 管理者編集モード：点検ID {{ edit_iid }} を修正しています（保存すると上書きされます）</div>{% endif %}
+<div class="ck-controls">
+  <label>文字:
+    <select id="ck-font-select">
+      <option value="normal">標準</option>
+      <option value="large">大</option>
+      <option value="xlarge">特大</option>
+    </select>
+  </label>
+  <label>テンキー:
+    <select id="ck-keypad-select">
+      <option value="off">OFF</option>
+      <option value="on">ON</option>
+    </select>
+  </label>
+</div>
+<div class="meta">
+  <div><label>点検日</label><input type="date" id="date" value="{{ today }}"></div>
+  <div><label>点検者名</label>
+    <select id="inspector" onchange="clearInspectorError()">
+      <option value="">--- 選択してください ---</option>
+      {% for name in inspectors %}<option value="{{ name }}">{{ name }}</option>{% endfor %}
+    </select>
+    <div id="inspector-error" class="field-error" style="display:none">⚠ 点検者名を選択してください</div>
+  </div>
+</div>
+<form id="ckform" data-key="{{ current.key }}" data-locked="{{ '1' if done_today else '0' }}" data-edit-iid="{{ edit_iid or '' }}" class="{{ 'locked' if done_today else '' }}">
+{% for sec, items in sections %}
+  <div class="sec">{{ sec }}</div>
+  {% for it in items %}
+  <div class="ck-row" data-name="{{ it.item_name }}" data-type="{{ it.item_type }}"
+       data-min="{{ it.min_value if it.min_value is not none else '' }}"
+       data-max="{{ it.max_value if it.max_value is not none else '' }}"
+       {% if it.item_type == 'calc' %}data-formula="{{ it.formula }}" data-unit="{{ it.unit }}"{% endif %}>
+    <div class="name">{{ it.item_name }}
+      {% if it.min_value is not none or it.max_value is not none %}<small>基準 {% if it.min_value is not none %}{{ it.min_value|num }}{% endif %}〜{% if it.max_value is not none %}{{ it.max_value|num }}{% endif %}</small>{% endif %}
+    </div>
+    <div class="ck-remark{% if it.important %} important{% endif %}">{{ it.remark }}</div>
+    <div class="ck-input">
+      {% if it.item_type == 'check' %}
+        <button type="button" class="ck-btn ck-ok" onclick="setCheck(this,'OK')">OK</button>
+        <button type="button" class="ck-btn ck-ng" onclick="setCheck(this,'NG')">NG</button>
+      {% elif it.item_type == 'meter' %}
+        <span class="meter-hint">↓ 下で入力</span>
+      {% elif it.item_type == 'meter_before' %}
+        <input type="number" step="any" class="ck-num ck-mb" data-group="{{ it.meter_group }}" oninput="onMeterInput(this)" value="{{ meter_prev.get('grp:' + it.meter_group, '') }}">
+        <span class="unit">{{ it.unit }}</span>
+      {% elif it.item_type == 'meter_after' %}
+        <input type="number" step="any" class="ck-num ck-ma" data-group="{{ it.meter_group }}" oninput="onMeterInput(this)">
+        <span class="unit">{{ it.unit }}</span>
+      {% elif it.item_type == 'time' %}
+        <input type="time" class="ck-time">
+        <button type="button" class="btn-now" onclick="setNow(this)">現在時刻</button>
+      {% elif it.item_type == 'calc' %}
+        <span class="calc-result">—</span>
+      {% else %}
+        <input type="number" step="any" class="ck-num" oninput="recalc(this)">
+        <span class="unit">{{ it.unit }}</span>
+      {% endif %}
+    </div>
+    <div class="judge j-na">—</div>
+    {% if it.item_type == 'meter' %}
+    <div class="meter-io" data-unit="{{ it.unit }}">
+      <label class="mio-field">使用前
+        <input type="number" step="any" class="ck-num ck-meter-before" oninput="computeUsage(this)" value="{{ meter_prev.get(it.item_name, '') }}">
+        <span class="unit">{{ it.unit }}</span>
+      </label>
+      <label class="mio-field">使用後
+        <input type="number" step="any" class="ck-num ck-meter-after" oninput="computeUsage(this)">
+        <span class="unit">{{ it.unit }}</span>
+      </label>
+      <span class="mu-result">当日使用量 —</span>
+    </div>
+    {% endif %}
+    {% if it.item_type == 'meter_after' %}
+    <div class="meter-result" data-group="{{ it.meter_group }}" data-unit="{{ it.unit }}">当日使用量 —</div>
+    {% endif %}
+  </div>
+  {% endfor %}
+{% endfor %}
+<div class="note"><label>特記事項・コメント</label><textarea id="note"></textarea></div>
+<div class="foot">
+  <button type="button" class="btn-temp" onclick="saveTempInspection()">一時保存</button>
+  <button type="button" class="btn-save" onclick="saveInspection(false)">点検を保存</button>
+</div>
+<p class="lo-muted" style="padding:0 18px 14px;color:#667085;font-size:13px;">※ PDF出力は「過去の点検結果」から行えます。</p>
+</form>
+{% else %}<p class="error">設備が登録されていません。equipments フォルダに設備を追加してください。</p>{% endif %}
+<script src="{{ url_for('static', filename='record.js') }}"></script>
+{% endblock %}
