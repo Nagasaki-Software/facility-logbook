@@ -11,3 +11,6 @@ output/
 # 開発用のメモ（手元にだけ残し、公開しない）
 check/docs/
 引き継ぎメモ.md
+# 以前の更新方法（データ引き継ぎ.bat に置き換え。手元にだけ残す）
+アプリ更新.bat
+tools/update_app.py
